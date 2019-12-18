@@ -1,0 +1,88 @@
+INDEX MAPPING
+
+1. mapping product_listing using JSON code
+
+curl -X PUT "localhost:9200/product_listing?pretty" -H 'Content-Type: application/json' -d'
+{
+  "mappings": {
+    "properties": {
+      "product_name"     : { "type": "text"},
+      "model_name"       : { "type": "text"},
+      "product_serial_no": { "type": "integer"},
+      "group_associated" : { "type": "text"},
+      "product_mrp_rs"   : { "type": "integer"}    
+    }
+  }
+}
+'
+
+
+2. mapping group_listing using JSON code
+
+curl -X PUT "localhost:9200/group_listing?pretty" -H 'Content-Type: application/json' -d'
+{
+  "mappings": {
+    "properties": {
+      "group_name"         :  { "type": "text" },
+      "group_description"  :  { "type": "text"  },
+      "isActive"           :  { "type": "text"  }    
+    }
+  }
+}
+'
+
+
+
+
+PARSING DATA USING LOGSTASH TOOL 
+
+1. parsing product_listing data and creating index in ES using JSON code
+
+input{
+file{
+path => "/home/elastic/Downloads/new.csv"
+start_position => "beginning"
+sincedb_path => "/dev/null"
+}
+}
+
+filter{
+csv{
+separator => ","
+columns => ['product_name',     'model_name',   'product_serial_no',    'group_associated',     'product_mrp_rs']
+}
+mutate {convert => ["product_serial_no", "integer"]}
+mutate {convert => ["product_mrp_rs", "integer"]}
+}
+
+output{
+elasticsearch{
+hosts => "localhost:9200"
+index => "product_listing"
+}
+}
+
+
+
+2. parsing group_listing data and creating index in ES using JSON code
+
+input{
+file{
+path => "/home/elastic/Downloads/new1.csv"
+start_position => "beginning"
+sincedb_path => "/dev/null"
+}
+}
+
+filter{
+csv{
+separator => ","
+columns => ['group_name',       'group_description',    'isActive']
+}
+}
+
+output{
+elasticsearch{
+hosts => "localhost:9200"
+index => "group_listing"
+}
