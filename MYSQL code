@@ -1,0 +1,22 @@
+1.CODE FOR CREATING PRODUCT_LISTING TABLE IN MYSQL DATABASE
+
+        use  beginner_assignment01;
+        create table  product_listing(
+        Product_Name varchar(20),
+        Model_Name varchar(20),	
+        Product_Serial_No bigint,
+        Group_Associated varchar(20),
+        product_MRP_rs int )
+        select * from product_listing;
+
+
+
+
+2. CODE FOR CREATING GROUP_LISTING TABLE IN MYSQL DATABASE
+
+        use  beginner_assignment01;
+        create table group_listing(
+        group_name varchar(20),
+        group_description varchar(20),
+        isActive varchar(10))
+        select * from group_listing;
